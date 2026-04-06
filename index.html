@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>婚活偏差値診断</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- スタート画面 -->
+        <div id="start-screen" class="screen active">
+            <h1>婚活偏差値診断</h1>
+            <p class="description">
+                10問の質問に答えて、あなたの婚活偏差値を確認しましょう！<br>
+                あなたの「コミュニケーションスタイル」と「幸せ体質度」を診断します。
+            </p>
+            <button id="start-btn" class="btn-primary">診断を始める</button>
+            
+            <!-- 自己紹介セクション -->
+            <div class="profile-section">
+                <h2 class="profile-title">この診断の監修者</h2>
+                <h3 class="profile-name">紗々＠現役仲人</h3>
+                <div class="profile-description">
+                    <p>理想は世の中全ての人が幸せになればいいと思いつつも、現実にはせめて自分とすれ違う人だけでも幸せにしたい、というおせっかい気質で、結婚相談所の仲人をやっています。</p>
+                    <p>生涯幸せな結婚を実現できる自分に産まれ変わるためのパーソナルトレーニングを提供しています。</p>
+                    <p>日本から「結婚したいのにできない」をなくすため、日々奮闘中！！<br>
+                    婚活・恋愛に関するあなたのお悩みをなんでもスッキリ解決します。<br>
+                    どのようなお悩みであっても真摯に対応致しますので、お困りの方は是非お気軽にご連絡ください。</p>
+                </div>
+                <div class="profile-links">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdeudY7mISZlAvjgax5Iu66jLedVfSnhv39tqHV-0WqswxBVQ/viewform" target="_blank" rel="noopener noreferrer" class="profile-link">
+                        📝 無料カウンセリングのお申込みはこちら
+                    </a>
+                    <a href="https://line.me/ti/g2/Kcbgr8BtPVrqoV5zDTnmOg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener noreferrer" class="profile-link">
+                        💬 LINEオープンチャット「現役仲人がお答えする結婚・婚活お悩み相談室」
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 質問画面 -->
+        <div id="question-screen" class="screen">
+            <div class="progress-bar">
+                <div id="progress" class="progress-fill"></div>
+            </div>
+            <p class="question-counter">質問 <span id="current-question">1</span> / 10</p>
+            
+            <div class="question-card">
+                <p class="category" id="category"></p>
+                <h2 class="question-text" id="question-text"></h2>
+                
+                <div id="options-container" class="options-container">
+                    <!-- 選択肢がここに動的に追加されます -->
+                </div>
+                
+                <button id="next-btn" class="btn-primary" disabled>次へ</button>
+            </div>
+        </div>
+
+        <!-- 結果画面 -->
+        <div id="result-screen" class="screen">
+            <div class="result-card">
+                <!-- 結果画面上部のリンクセクション -->
+                <div class="result-links">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdeudY7mISZlAvjgax5Iu66jLedVfSnhv39tqHV-0WqswxBVQ/viewform" target="_blank" rel="noopener noreferrer" class="result-link">
+                        📝 無料カウンセリングのお申込みはこちら
+                    </a>
+                    <a href="https://line.me/ti/g2/Kcbgr8BtPVrqoV5zDTnmOg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener noreferrer" class="result-link">
+                        💬 LINEオープンチャット「現役仲人がお答えする結婚・婚活お悩み相談室」
+                    </a>
+                </div>
+                
+                <h1 class="result-title" id="result-title"></h1>
+                <p class="result-lead" id="result-lead"></p>
+                <div class="result-description" id="result-description"></div>
+                
+                <div class="score-display">
+                    <!-- 幸せ体質度バー -->
+                    <div class="score-bar-container">
+                        <div class="score-bar-header">
+                            <span class="score-bar-title">幸せ体質度：</span>
+                            <span class="score-bar-label" id="happiness-label"></span>
+                            <span class="score-bar-value" id="happiness-score"></span>
+                            <button class="info-icon" id="happiness-info-btn" aria-label="幸せ体質について">ⓘ</button>
+                        </div>
+                        <!-- 幸せ体質度のポップアップ -->
+                        <div class="info-popup" id="happiness-popup">
+                            <div class="info-popup-content">
+                                <button class="info-popup-close" aria-label="閉じる">×</button>
+                                <h3 class="info-popup-title">幸せ体質について</h3>
+                                <p class="info-popup-text">この項目は、あなたが物事をどのように感じる傾向があるかを示しています。<br>
+同じ事象に出逢ったとしても、感じ方は人それぞれです。<br>
+ある事象に出逢った時、あなたがそれをポジティブに捉える傾向があるとしたら、それは幸せ体質。ネガティブに捉える傾向があるとしたらあなたは不幸体質です。<br>
+人生には様々な出来事が起こります。幸せな人というのは、良くない出来事に遭遇しない人ではなく、全ての事象を前向きに捉え、ポジティブに消化してしまう人なのです。</p>
+                            </div>
+                        </div>
+                        <div class="score-bar-labels">
+                            <span class="bar-label-left">不幸体質</span>
+                            <span class="bar-label-right">幸せ体質</span>
+                        </div>
+                        <div class="score-bar-track">
+                            <div class="score-bar-center"></div>
+                            <div class="score-bar-fill happiness-bar" id="happiness-bar"></div>
+                        </div>
+                        <div class="score-bar-scale">
+                            <span>-20</span>
+                            <span>-10</span>
+                            <span>0</span>
+                            <span>10</span>
+                            <span>20</span>
+                        </div>
+                    </div>
+                    
+                    <!-- コミュニケーションスタイルバー -->
+                    <div class="score-bar-container">
+                        <div class="score-bar-header">
+                            <span class="score-bar-title">コミュニケーションスタイル：</span>
+                            <span class="score-bar-label" id="communication-label"></span>
+                            <span class="score-bar-value" id="communication-score"></span>
+                            <button class="info-icon" id="communication-info-btn" aria-label="コミュニケーションスタイルについて">ⓘ</button>
+                        </div>
+                        <!-- コミュニケーションスタイルのポップアップ -->
+                        <div class="info-popup" id="communication-popup">
+                            <div class="info-popup-content">
+                                <button class="info-popup-close" aria-label="閉じる">×</button>
+                                <h3 class="info-popup-title">コミュニケーションスタイルについて</h3>
+                                <p class="info-popup-text">この項目は、あなたが他者とどのように接し、どのような時に他者を大切に想うのかを示しています。<br>
+愛情型のコミュニケーションスタイルの人は、目の前にいる人を無条件に尊重し、大切に扱い、そうすることに喜びを感じます。<br>
+一方、評価型のコミュニケーションスタイルの人は、目の前にいる人を自分の価値観で○か×に評価し、自分にとって望ましい人は尊重し、大切に接し、そうではない人は、粗末に扱います。<br>
+長い結婚生活においては、自分も相手も変化します。その都度、パートナーから○か×で評価される家庭に安らぎなんてありません。<br>
+仮にマイナスの変化が起きたとしても、家族は変わらぬ愛情で接してくれる。そんなコミュニケーションスタイルこそが、生涯幸せな家庭の土台になるのです。</p>
+                            </div>
+                        </div>
+                        <div class="score-bar-labels">
+                            <span class="bar-label-left">評価型</span>
+                            <span class="bar-label-right">愛情型</span>
+                        </div>
+                        <div class="score-bar-track">
+                            <div class="score-bar-center"></div>
+                            <div class="score-bar-fill communication-bar" id="communication-bar"></div>
+                        </div>
+                        <div class="score-bar-scale">
+                            <span>-20</span>
+                            <span>-10</span>
+                            <span>0</span>
+                            <span>10</span>
+                            <span>20</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- トレーニング推奨セクション -->
+                <div id="training-section" class="training-section">
+                    <h2 class="training-title" id="training-title"></h2>
+                    <div id="training-items" class="training-items">
+                        <!-- トレーニング項目がここに動的に追加されます -->
+                    </div>
+                </div>
+                
+                <!-- Xシェアボタン -->
+                <div class="share-section">
+                    <button id="share-twitter-btn" class="btn-twitter">
+                        <svg class="twitter-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                        </svg>
+                        結果をXでシェア
+                    </button>
+                </div>
+                
+                <p class="restart-note">質問はランダムに10問選択されます。<br>もう一度診断することによって結果は変わる可能性があります。</p>
+                
+                <div class="result-buttons">
+                    <button id="close-result-btn" class="btn-secondary">診断を終了する</button>
+                    <button id="restart-btn" class="btn-primary">もう一度診断する</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 誘導メッセージモーダル -->
+        <div class="guidance-modal" id="guidance-modal">
+            <div class="guidance-modal-content">
+                <button class="guidance-modal-close" id="guidance-modal-close" aria-label="閉じる">×</button>
+                <h2 class="guidance-modal-title">診断お疲れ様でした！！</h2>
+                <div class="guidance-modal-body">
+                    <div class="guidance-item">
+                        <h3 class="guidance-item-title">💬 結果についてさらに詳しく知りたい方へ</h3>
+                        <p class="guidance-item-text">現役仲人がみなさまの結婚・婚活に関するお悩みにお答えするLINEオープンチャットにご参加ください。診断内容の解説はもちろん、みなさまおひとりおひとりのお悩みや状況に寄り添った回答をご提供します。</p>
+                        <a href="https://line.me/ti/g2/Kcbgr8BtPVrqoV5zDTnmOg?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" target="_blank" rel="noopener noreferrer" class="guidance-link">
+                            オープンチャットに参加する
+                        </a>
+                    </div>
+                    <div class="guidance-item">
+                        <h3 class="guidance-item-title">📝 婚活の悩みを解消したい方へ</h3>
+                        <p class="guidance-item-text">電話による個別の無料カウンセリングも実施しております。マンツーマンでご相談されたい方はリンク先のフォームよりお申し込みください。</p>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdeudY7mISZlAvjgax5Iu66jLedVfSnhv39tqHV-0WqswxBVQ/viewform" target="_blank" rel="noopener noreferrer" class="guidance-link">
+                            無料カウンセリングに申し込む
+                        </a>
+                    </div>
+                </div>
+                <button class="guidance-modal-btn" id="guidance-modal-confirm">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="results.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
